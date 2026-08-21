@@ -10,13 +10,18 @@ class App:
     def get_main_container(self):
         return self.main_container
         
-    def render(self):
+    def render(self, debug=False):
         # TODO: implement rendering logic
         txt = self._render_container(self.main_container, None)
+        lengths = [len(fstrip(line)) for line in txt.split("\n")]
         for line in txt.split("\n"):
             printc(line, bg=(0, 0, 0), fg=(255, 255, 255))
-        pass
-    
+        
+        if (debug is True):
+            printc(f"Debug: {len(txt.split("\n"))} lines rendered", fg=(255, 255, 0), dec=["bold"])
+            if (len(set(lengths)) > 1):
+                printc("Warning: Certain lines are not the same length", fg=(255, 0, 0), dec=["bold"])
+        
     def _render_container(self, container, parent):  
         if (type(container) == Box):
             txt = ""
@@ -26,6 +31,9 @@ class App:
             # check layout
             # print(children)
             max_width = container.get_style("width")
+            if (parent is not None):
+                if (max_width > parent.get_real_width()):
+                    max_width = parent.get_real_width()
             max_height = container.get_style("height")
             if (container.get_style("border") is True):
                 max_width -=2
@@ -88,6 +96,7 @@ class App:
                     if (len(fstrip(lines[i])) < max_width):
                         lines[i] += printp(" " * (max_width - len(fstrip(lines[i]))), presets)
                 txt += "\n".join(lines)
+              
                         
 
             # add border if needed
@@ -105,8 +114,14 @@ class App:
             width = container.get_style("width")
             if (width == "parent"):
                 width = parent.get_style("width") 
+                
+            if (width > parent.get_real_width()):
+                width = parent.get_real_width()
+            
+            
             width = int(width)
             text = container.get_text()
+
             text_presets = {
                 "bg": container.get_style("background"),
                 "fg": container.get_style("color"),
@@ -143,11 +158,14 @@ class Box:
             "background": (230, 230, 230)
         }
         self.parent = None
+        self.real_width = 100
     
     # helper methods for managing styles and children
     
     def set_style(self, key, value):
         self.styles[key] = value
+        
+        
         
     def set_styles(self, styles):
         self.styles.update(styles)
@@ -173,6 +191,19 @@ class Box:
         
     def get_children(self):
         return self.children
+    
+    def get_real_width(self):
+        width = self.get_style("width")
+        if (self.get_style("border") is True):
+            width -= 2
+        return width
+        
+    
+    def get_real_height(self):
+        height = self.get_style("height")
+        if (self.get_style("border") is True):
+            height -=2
+    
         
 
 class Text: 

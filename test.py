@@ -5,6 +5,7 @@ app = App()
 main_box = Box()
 
 heading = Text("Hello World lorem ipsum dolor sit amet, consectetuar aoeihgagehiwaoughioc heoiuh ei heoiuheoieioheiuoeoiheoi heoi iuoe")
+heading.set_style("width", 100)
 main_box.add_child(heading)
 main_box.set_style("border", True)
 
@@ -30,10 +31,18 @@ text4.set_style("width", 50)
 text4.set_style("font_weight", "bold")
 box2.add_child(text4)
 
+box3 = Box()
+box3.set_style("width", 100)
+box3.set_style("border", True)
+
+text5 = Text("Testing border overflow 3")
+text5.set_style("background", (200, 200, 200))
+box3.add_child(text5)
+main_box.add_child(box3)
 app.set_main_container(main_box)
 # res = app._render_container(main_box, None)
 # print(res)
-app.render()
+app.render(debug=True)
 
 # testing strip_formatting
 t = printc("Hello World", bg=(255, 0, 0), fg=(255, 255, 255), dec=["bold"], val_ret=True)

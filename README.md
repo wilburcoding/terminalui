@@ -77,6 +77,14 @@ Objectives:
    - Separate outer and inner heights and width dimensions?
      - All children should be based on inner width
      - The actual outer size is read by the parent of the container
+   - Borders not stacking? Why
+     - Boxes use set height, not real height. Same with width. 
+     - Want to make sure that outer box is the correct width
+       - Forcing parent width as maximum
+     - What about extra width from the prev?
+       - can't forcibly remove?
+       - Let's just put a warning since all dimensions are hard set
+         - How to detect anyways?
 
 # Notes
 
