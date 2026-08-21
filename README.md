@@ -71,4 +71,4 @@ This sounded a lot easier in my head
 
 Google says i should have helper methods instead of letting people access my variables directly so i guess im doing that
 
-Normal Python shell ignores reset tokens. Command prompt seems to work. Also providing an extra new line at the end helps with the issue. VSCode commnad prompt also doesn't seem to work. 
+Normal Python shell ignores reset tokens. Command prompt seems to work. Also providing an extra new line at the end helps with the issue. VSCode commnad prompt also doesn't seem to work. Looks like splitting lines individually also helps with this issue. 

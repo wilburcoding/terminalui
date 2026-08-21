@@ -13,7 +13,8 @@ class App:
     def render(self):
         # TODO: implement rendering logic
         txt = self._render_container(self.main_container, None)
-        print(printc(txt, fg=(0, 0, 0), bg=(255, 255, 255), val_ret=True) + "\n")
+        for line in txt.split("\n"):
+            printc(line, bg=(0, 0, 0), fg=(255, 255, 255))
         pass
     
     def _render_container(self, container, parent):  
@@ -33,26 +34,38 @@ class App:
                 y_offset = 0 # keep track for every row
                 row = []
                 lines = []
-                
+                # print(children)
                 for child in children:
+                    spl = child.split("\n")
+
                     if (len(lines) == 0):
-                        spl = child.split("\n")
                         for i in range(len(spl)):
                             lines.append(spl[i])
                         continue
-                    if (len(lines[-1]) + len(child) > max_width):
+                    # print(len(lines[-1]))
+                    if (len(lines[-1]) + len(spl[0]) > max_width):
                         # new row -> clean up existing lines and add new row with child
                         y_offset += len(lines)
+                        for i in range(len(lines)):
+                            if (len(lines[i]) < max_width):
+                                lines[i] += " " * (max_width - len(lines[i]))
+                        for i in range(len(spl)):
+                            lines.append(spl[i])
                     else:
                         # add on to current row
-                        spl = child.split("\n")
                         if (len(spl) > len(lines)):
                             for i in range(len(lines), len(spl)):
                                 lines.append(" " * len(lines[0]))
                         for i in range(len(spl)):
                             lines[i + y_offset] += spl[i]
+
                             
                 # clean up lines
+                for i in range(len(lines)):
+                    if (len(lines[i]) < max_width):
+                        lines[i] += " " * (max_width - len(lines[i]))
+                txt += "\n".join(lines)
+                        
 
                         
                     
