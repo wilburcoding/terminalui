@@ -5,7 +5,7 @@ RESET = "\x1b[0m"
 BOLD = "\x1b[1m"
 
 def printc(msg, bg=None, fg=(255,255,255), dec=[], val_ret=False): # dec = text decorations, val_ret is whether to return the value or not
-    fstr = ""
+    fstr = RESET
     if (not bg is None):
         fstr+=f"\x1b[48;2;{bg[0]};{bg[1]};{bg[2]}m"
     
@@ -25,7 +25,7 @@ def printc(msg, bg=None, fg=(255,255,255), dec=[], val_ret=False): # dec = text 
     print(fstr) 
     
 def printp(msg, presets):
-    fstr = ""
+    fstr = RESET
     if (not presets["bg"] is None):
         fstr+=f"\x1b[48;2;{presets['bg'][0]};{presets['bg'][1]};{presets['bg'][2]}m"
     
@@ -45,9 +45,63 @@ def printp(msg, presets):
     
     print(fstr)
 
-def strip_formatting(msg):
+def fstrip(msg):
     msg = msg.replace(RESET, "")
     msg = msg.replace(BOLD, "")
     msg = re.sub(r"\x1b\[38;2;\d{1,3};\d{1,3};\d{1,3}m", "", msg)
     msg = re.sub(r"\x1b\[48;2;\d{1,3};\d{1,3};\d{1,3}m", "", msg)
     return msg
+
+def borders(style):
+    borders =[]
+    borders.append({
+        "tl": "#",
+        "tr": "#",
+        "bl":"#",
+        "br": "#",
+        "t": "#",
+        "l": "#",
+        "b": "#",
+        "r": "#"
+    })
+    borders.append({
+        "tl": "*",
+        "tr": "*",
+        "bl": "*",
+        "br": "*",
+        "t": "*",
+        "b": "*",
+        "l": "*",
+        "r": "*"
+    })
+    borders.append({
+        "tl":"┌",
+        "tr":"┐",
+        "bl":"└",
+        "br": "┘",
+        "t":"─",
+        "b":"─",
+        "r": "│",
+        "l": "│"
+    })
+    borders.append({
+        "tl":"╔",
+        "tr":"╗",
+        "bl": "╚",
+        "br": "╝",
+        "t": "═",
+        "b": "═",
+        "r": "║",
+        "l": "║"
+    })    
+    borders.append({
+        "tl": "╭",
+        "tr": "╮",
+        "bl": "╰",
+        "br": "╯",
+        "t": "─",
+        "b":"─",
+        "r": "│",
+        "l": "│"
+    })
+    return borders[style]

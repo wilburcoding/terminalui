@@ -1,5 +1,5 @@
 # main handler for the ui
-from colors import printc, printp
+from colors import printc, printp, fstrip, borders
 class App:
     def __init__(self):
         self.main_container = None
@@ -25,12 +25,19 @@ class App:
                 children.append(self._render_container(child, container))
             # check layout
             # print(children)
+            max_width = container.get_style("width")
+            max_height = container.get_style("height")
+            if (container.get_style("border") is True):
+                max_width -=2
+                max_height -= 2
+            
+            
+
             if (container.get_style("layout") == "vertical"):
                 # TODO: check for other styles
                 txt += "\n".join(children)
             elif (container.get_style("layout") == "horizontal"):
                 # check widths 
-                max_width = container.get_style("width")
                 y_offset = 0 # keep track for every row
                 row = []
                 lines = []
@@ -43,33 +50,56 @@ class App:
                             lines.append(spl[i])
                         continue
                     # print(len(lines[-1]))
-                    if (len(lines[-1]) + len(spl[0]) > max_width):
+                    if (len(fstrip(lines[-1])) + len(fstrip(spl[0])) > max_width):
                         # new row -> clean up existing lines and add new row with child
                         y_offset += len(lines)
+                        presets = {
+                            "bg": container.get_style("background"),
+                            "fg": None,
+                            "dec": [],
+                            "val_ret": True
+                        }
                         for i in range(len(lines)):
-                            if (len(lines[i]) < max_width):
-                                lines[i] += " " * (max_width - len(lines[i]))
+                            if (len(fstrip(lines[i])) < max_width):
+                                # print(lines[i])
+                                lines[i] += printp(" " * (max_width - len(fstrip(lines[i]))), presets)
+                            # needs to clean up with the styles of the last element in this row
                         for i in range(len(spl)):
                             lines.append(spl[i])
                     else:
                         # add on to current row
                         if (len(spl) > len(lines)):
                             for i in range(len(lines), len(spl)):
-                                lines.append(" " * len(lines[0]))
+                                lines.append(" " * len(fstrip(lines[0])))
                         for i in range(len(spl)):
                             lines[i + y_offset] += spl[i]
+                        
+                        
 
                             
                 # clean up lines
+                presets = {
+                    "bg": container.get_style("background"),
+                    "fg": None,
+                    "dec": [],
+                    "val_ret": True
+                }
                 for i in range(len(lines)):
-                    if (len(lines[i]) < max_width):
-                        lines[i] += " " * (max_width - len(lines[i]))
+                    if (len(fstrip(lines[i])) < max_width):
+                        lines[i] += printp(" " * (max_width - len(fstrip(lines[i]))), presets)
                 txt += "\n".join(lines)
                         
 
-                        
+            # add border if needed
+            if (container.get_style("border") is True):
+                border_style = borders(3)
+                first_line = border_style["tl"] + (border_style["t"] * max_width) + border_style["tr"]
+                spl = txt.split("\n")
+                for i in range(len(spl)):
+                    spl[i] = border_style["l"] + spl[i] + border_style["r"]
+                last_line = border_style["bl"] + (border_style["b"] * max_width) + border_style["br"]
+                txt = first_line + "\n" + "\n".join(spl) + "\n" + last_line 
                     
-            print(txt)
             return txt
         elif (type(container) == Text):
             width = container.get_style("width")
@@ -109,7 +139,8 @@ class Box:
             "width": 100, 
             "border": False,
             "height": 10,
-            "layout": "vertical"
+            "layout": "vertical",
+            "background": (230, 230, 230)
         }
         self.parent = None
     
@@ -149,7 +180,7 @@ class Text:
         self.text = text
         self.styles = { # default styles
             "color": (255, 255, 255),
-            "background": None,
+            "background": (0, 0, 0),
             "word_wrap": "break-word",
             "font_weight": "normal",
             "width": "parent"

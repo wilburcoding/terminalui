@@ -19,8 +19,11 @@ Objectives:
        - [x] Container layouts -> just row and column for now probably
      - [ ] More TBD
    - [ ] Elements properties
-   - [ ] Rendering
+   - [x] Rendering
      - [ ] Initial rendering
+       - [x] Text
+       - [x] Different container layouts
+       - [ ] Borders
      - [ ] Figure out how to update things? 
  - [x] Color rendering engine
  - [ ] 
@@ -68,6 +71,12 @@ Objectives:
    - I guess always use parent function styling -> mostly a background issue
  - Text styling uses extra characters. What to do?
    - Add formatting stripping function? Can use regular expressions for the special color ones
+ - What to do if there is extra space at the end of a row for horizontal or vertical layouts??
+   - Use parent styling (just background for the filling)
+ - Borders
+   - Separate outer and inner heights and width dimensions?
+     - All children should be based on inner width
+     - The actual outer size is read by the parent of the container
 
 # Notes
 
