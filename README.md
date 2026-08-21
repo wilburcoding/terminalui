@@ -16,7 +16,7 @@ Objectives:
    - [ ] Elements
      - [x] Text
      - [x] Container
-       - [ ] Container layouts -> just row and column for now probably
+       - [x] Container layouts -> just row and column for now probably
      - [ ] More TBD
    - [ ] Elements properties
    - [ ] Rendering
@@ -62,6 +62,12 @@ Objectives:
      - Can pass parameters to style these elements
      - Can tag elements with ID to find them later
    - Call function to render or update UI 
+ - How to fix styles resetting in the middle bcs of new text?
+   - Don't immediate add filling spaces for text?
+     - This would really mess up how the current formatting works though
+   - I guess always use parent function styling -> mostly a background issue
+ - Text styling uses extra characters. What to do?
+   - Add formatting stripping function? Can use regular expressions for the special color ones
 
 # Notes
 

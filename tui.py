@@ -1,5 +1,5 @@
 # main handler for the ui
-from colors import printc
+from colors import printc, printp
 class App:
     def __init__(self):
         self.main_container = None
@@ -77,14 +77,24 @@ class App:
                 width = parent.get_style("width") 
             width = int(width)
             text = container.get_text()
+            text_presets = {
+                "bg": container.get_style("background"),
+                "fg": container.get_style("color"),
+                "dec": [container.get_style("font_weight")],
+                "val_ret":True
+            }
             # TODO: implement different word wrap styling logics
             if (container.get_style("word_wrap") == "break-word"):
                 lines = []
                 # TODO: implement different text styling
                 for i in range(0, int(len(text) / width + 1)):
-                    lines.append(text[i * width:(i+1)*width])
+                    t = text[i * width:(i+1)*width]
+                    lines.append(t)
                 if (len(lines[-1]) < width):
                     lines[-1] += " " * (width - len(lines[-1]))
+                for i in range(len(lines)):
+                    lines[i] = printp(lines[i], text_presets)
+                    
             return "\n".join(lines)
 
             
@@ -138,8 +148,8 @@ class Text:
     def __init__(self, text):
         self.text = text
         self.styles = { # default styles
-            "color": "white",
-            "background": "black",
+            "color": (255, 255, 255),
+            "background": None,
             "word_wrap": "break-word",
             "font_weight": "normal",
             "width": "parent"
