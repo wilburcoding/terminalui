@@ -1,8 +1,16 @@
 # main handler for the ui
 from colors import printc, printp, fstrip, borders
+import pynput
+import os
+
 class App:
     def __init__(self):
         self.main_container = None
+        self.listener_active = False
+        self.custom_key_actions = {
+            "on_key_press": None,
+            "on_key_release": None
+        }
         
     def set_main_container(self, container):
         self.main_container = container
@@ -21,6 +29,51 @@ class App:
             printc(f"Debug: {len(txt.split("\n"))} lines rendered", fg=(255, 255, 0), dec=["bold"])
             if (len(set(lengths)) > 1):
                 printc("Warning: Certain lines are not the same length. Make sure you are accounting for borders. ", fg=(255, 0, 0), dec=["bold"])
+    
+    def start_listener(self):
+        self.listener_active = True
+        with pynput.keyboard.Listener(on_press=self.on_key_press, on_release=self.on_key_release) as listener:
+            listener.join()
+        
+            
+    def on_key_press(self, key):
+        # print(key)
+        if (key == pynput.keyboard.Key.esc):
+            return False    
+        if (self.listener_active is False):
+            return False
+        
+        if (self.custom_key_actions["on_key_press"] is not None):
+            self.custom_key_actions["on_key_press"](key)
+    def on_key_release(self, key):
+        if (key == pynput.keyboard.Key.esc):
+            return False
+        if (self.listener_active is False):
+            return False
+        
+        if (self.custom_key_actions["on_key_release"] is not None):
+            self.custom_key_actions["on_key_release"](key)
+        
+    def stop_listener(self):
+        self.listener_active = False
+        
+    def _clear(self):
+        os.system("cls" if os.name == "nt" else "clear")
+        
+    def set_custom_key_action(self, action_type, action):
+        if (action_type not in self.custom_key_actions):
+            raise ValueError(f"Invalid action type: {action_type}")
+        self.custom_key_actions[action_type] = action
+    
+    def get_custom_key_action(self, action_type):
+        if (action_type not in self.custom_key_actions):
+            raise ValueError(f"Invalid action type: {action_type}")
+        return self.custom_key_actions[action_type]
+
+    def clear_custom_key_action(self, action_type):
+        if (action_type not in self.custom_key_actions):
+            raise ValueError(f"Invalid action type: {action_type}")
+        self.custom_key_actions[action_type] = None
         
     def _render_container(self, container, parent):  
         if (type(container) == Box):
@@ -187,7 +240,6 @@ class App:
                 "dec": [container.get_style("font_weight")],
                 "val_ret": True
             }
-            # TODO: text styling
             for i in range(0, int(len(text) / width + 1)):
                 t = text[i * width:(i+1)*width]
                 spl.append(printp(t, presets))
@@ -198,8 +250,23 @@ class App:
                     spl[i] += printp(" " * (width - len(fstrip(spl[i]))), presets)
             if (len(spl) < height):
                 for i in range(len(spl), height):
-                    spl.append(printp(" " * width, presets))    
-            return "\n".join(spl)
+                    spl.append(printp(" " * width, presets))  
+                    
+            # check border
+            if (container.get_style("border") is True):
+                border_style = borders(container.get_style("border_style"))
+                border_presets = {
+                    "fg": container.get_style("border_color"),
+                    "bg": container.get_style("border_background"),
+                    "dec": [],
+                    "val_ret": True
+                }
+                first_line = printp(border_style["tl"] + (border_style["t"] * width) + border_style["tr"], border_presets)
+                for i in range(len(spl)):
+                    spl[i] = printp(border_style["l"], border_presets) + spl[i] + printp(border_style["r"], border_presets)
+                last_line = printp(border_style["bl"] + (border_style["b"] * width) + border_style["br"], border_presets)
+                txt = first_line + "\n" + "\n".join(spl) + "\n" + last_line
+            return txt
                 
     
             
@@ -219,7 +286,10 @@ class Box:
             "border_style": 4,
             "border_background": None,
             "border_color": (255, 255, 255),
-            "background": (230, 230, 230)
+            "background": (230, 230, 230),
+            "hover": {
+                "border_style": 3
+            }
         }
         self.id = None
         self.parent = None
@@ -336,7 +406,10 @@ class Button:
             "border_style": 4,
             "border_background": None,
             "border_color": (255, 255, 255),
-            "button_action": None
+            "button_action": None,
+            "hover": {
+                "border_style": 3
+            }
         }
         self.id = None
         self.parent = None

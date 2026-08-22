@@ -48,12 +48,13 @@ app.set_main_container(main_box)
 # res = app._render_container(main_box, None)
 # print(res)
 
-button = Button("Click me something long text here or something")
+button = Button("Click me something")
 button.set_style("width", 30)
 main_box.add_child(button)
 print(main_box.get_styles())
 
 app.render(debug=True)
+app.start_listener()
 
 # testing strip_formatting
-t = printc("Hello World", bg=(255, 0, 0), fg=(255, 255, 255), dec=["bold"], val_ret=True)
+# t = printc("Hello World", bg=(255, 0, 0), fg=(255, 255, 255), dec=["bold"], val_ret=True)

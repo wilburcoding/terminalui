@@ -20,14 +20,14 @@ Objectives:
      - [x] Text
      - [x] Container
        - [x] Container layouts -> just row and column for now probably
-     - [ ] Button
+     - [x] Button
      - [ ] Links
    - [ ] Elements properties
    - [x] Rendering
-     - [ ] Initial rendering
+     - [x] Initial rendering
        - [x] Text
        - [x] Different container layouts
-       - [ ] Borders
+       - [x] Borders
      - [ ] Figure out how to update things? 
  - [x] Color rendering engine
  - [ ] 
@@ -69,6 +69,11 @@ Objectives:
      - Can pass parameters to style these elements
      - Can tag elements with ID to find them later
    - Call function to render or update UI 
+     - Rendering just clears and pastes new UI. 
+     - Start listener allows users to interact
+       - same rendering function but allow users to select items
+         - How to highlight selected items?
+           - All items have by default a "hover" style -> maybe like a different border style (double line border)
  - How to fix styles resetting in the middle bcs of new text?
    - Don't immediate add filling spaces for text?
      - This would really mess up how the current formatting works though
@@ -107,6 +112,9 @@ Objectives:
      - Or images
    - Text input?
      - If an input is selected all keyboard input is set into the text input
+ - Actively looking for input?
+   - keyboard module or pynput
+   - Think im gonna use pynput. Looks a little easier to use.
 
 # Notes
 
