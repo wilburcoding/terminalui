@@ -7,7 +7,10 @@ Objectives:
  - CSS like properties
  - HTML like elements: text, uh...
  - ANSI based colors -> allow any color
+ - Button inputs -> allow users to select buttons using arrow keys?
+   - Also maybe different frames? -> can select different frames
  - Easy to update?
+ - HTML/CSS based importing? would be a lot cleaner than the normal
 
 # TODO
 
@@ -85,6 +88,23 @@ Objectives:
        - can't forcibly remove?
        - Let's just put a warning since all dimensions are hard set
          - How to detect anyways?
+ - Elements expansion
+   - Lists? Should be easy
+   - Buttons
+     - Based on location 
+       - Ex. if you press left arrow, it searches for any buttons left at a certain range (starting with the height of the original button)
+       - If it doesn't find any buttons on this first path, it continually expands search radius in the direction 
+       - Should allow functions to attach to buttons
+   - Lists
+     - Automatically fills and adds new line when necesary
+     - Shoudl probably split this up into ordered and unordered lsits
+   - Links?
+     - Same way users are allowed to select elements?
+     - Styles on hover - this would likely be a lot easier to do if we used a css like format
+   - Can't really do different sized text
+     - Or images
+   - Text input?
+     - If an input is selected all keyboard input is set into the text input
 
 # Notes
 

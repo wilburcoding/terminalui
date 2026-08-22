@@ -20,10 +20,11 @@ class App:
         if (debug is True):
             printc(f"Debug: {len(txt.split("\n"))} lines rendered", fg=(255, 255, 0), dec=["bold"])
             if (len(set(lengths)) > 1):
-                printc("Warning: Certain lines are not the same length", fg=(255, 0, 0), dec=["bold"])
+                printc("Warning: Certain lines are not the same length. Make sure you are accounting for borders. ", fg=(255, 0, 0), dec=["bold"])
         
     def _render_container(self, container, parent):  
         if (type(container) == Box):
+            print(container.get_styles())
             txt = ""
             children = []
             for child in container.get_children():
@@ -101,12 +102,18 @@ class App:
 
             # add border if needed
             if (container.get_style("border") is True):
-                border_style = borders(3)
-                first_line = border_style["tl"] + (border_style["t"] * max_width) + border_style["tr"]
+                border_style = borders(container.get_style("border_style"))
+                presets = {
+                    "fg": container.get_style("border_color"),
+                    "bg": container.get_style("border_background"),
+                    "dec": [],
+                    "val_ret": True
+                }
+                first_line = printp(border_style["tl"] + (border_style["t"] * max_width) + border_style["tr"], presets)
                 spl = txt.split("\n")
                 for i in range(len(spl)):
-                    spl[i] = border_style["l"] + spl[i] + border_style["r"]
-                last_line = border_style["bl"] + (border_style["b"] * max_width) + border_style["br"]
+                    spl[i] = printp(border_style["l"], presets) + spl[i] + printp(border_style["r"], presets)
+                last_line = printp(border_style["bl"] + (border_style["b"] * max_width) + border_style["br"], presets)
                 txt = first_line + "\n" + "\n".join(spl) + "\n" + last_line 
                     
             return txt
@@ -155,8 +162,12 @@ class Box:
             "border": False,
             "height": 10,
             "layout": "vertical",
+            "border_style": 4,
+            "border_background": None,
+            "border_color": (255, 255, 255),
             "background": (230, 230, 230)
         }
+        self.id = None
         self.parent = None
         self.real_width = 100
     
@@ -204,6 +215,11 @@ class Box:
         if (self.get_style("border") is True):
             height -=2
     
+    def set_id(self, id):
+        self.id = id
+        
+    def get_id(self):
+        return self.id
         
 
 class Text: 
@@ -217,7 +233,7 @@ class Text:
             "width": "parent"
         }
         self.parent = None
-        
+        self.id = None
     
     
     # helper methods
@@ -245,6 +261,13 @@ class Text:
     
     def get_text(self):
         return self.text
+    
+    def set_id(self, id):
+        self.id = id
+        
+    def get_id(self):
+        return self.id
+    
     
 
     

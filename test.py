@@ -14,13 +14,16 @@ main_box.add_child(box2)
 box2.set_style("layout", "horizontal")
 box2.set_style("width", 100)
 box2.set_style("border", True)
+box2.set_style("border_style", 2)
+box2.set_style("border_color", (255, 0, 0))
+box2.set_style("border_background", (200, 200, 200))
 
 text2 = Text("Testing horizontal layout 2 soemoaeg e EIU IOE Eoi hOEIF EOIH iouef hoiUE O ")
-text2.set_style("width", 40)
+text2.set_style("width", 48)
 box2.add_child(text2)
 
 text3 = Text("Testing horizontal layout 3 ei uHIO oi heoIU Heoiu hEIOU HFoiuhe oiuFHOIEHOFIheoifuHEOIUHOIEHFOIueaehoiu eah oiaeu heaoi")
-text3.set_style("width", 45)
+text3.set_style("width", 48)
 text3.set_style("color", (255, 0, 0))
 text3.set_style("background", (255, 255, 255))
 
@@ -32,8 +35,10 @@ text4.set_style("font_weight", "bold")
 box2.add_child(text4)
 
 box3 = Box()
-box3.set_style("width", 100)
+box3.set_style("width", 98)
 box3.set_style("border", True)
+box3.set_style("border_style", 4)
+
 
 text5 = Text("Testing border overflow 3")
 text5.set_style("background", (200, 200, 200))
