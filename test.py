@@ -1,4 +1,4 @@
-from tui import App, Box, Text
+from tui import App, Box, Text, Button
 from colors import fstrip, printc
 app = App()
 
@@ -16,7 +16,7 @@ box2.set_style("width", 100)
 box2.set_style("border", True)
 box2.set_style("border_style", 2)
 box2.set_style("border_color", (255, 0, 0))
-box2.set_style("border_background", (200, 200, 200))
+# box2.set_style("border_background", (200, 200, 200))
 
 text2 = Text("Testing horizontal layout 2 soemoaeg e EIU IOE Eoi hOEIF EOIH iouef hoiUE O ")
 text2.set_style("width", 48)
@@ -47,6 +47,12 @@ main_box.add_child(box3)
 app.set_main_container(main_box)
 # res = app._render_container(main_box, None)
 # print(res)
+
+button = Button("Click me something long text here or something")
+button.set_style("width", 30)
+main_box.add_child(button)
+print(main_box.get_styles())
+
 app.render(debug=True)
 
 # testing strip_formatting

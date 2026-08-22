@@ -20,7 +20,8 @@ Objectives:
      - [x] Text
      - [x] Container
        - [x] Container layouts -> just row and column for now probably
-     - [ ] More TBD
+     - [ ] Button
+     - [ ] Links
    - [ ] Elements properties
    - [x] Rendering
      - [ ] Initial rendering
@@ -95,6 +96,7 @@ Objectives:
        - Ex. if you press left arrow, it searches for any buttons left at a certain range (starting with the height of the original button)
        - If it doesn't find any buttons on this first path, it continually expands search radius in the direction 
        - Should allow functions to attach to buttons
+     - Should essentially be the combination of box and text into a single element
    - Lists
      - Automatically fills and adds new line when necesary
      - Shoudl probably split this up into ordered and unordered lsits

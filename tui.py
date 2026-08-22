@@ -43,8 +43,22 @@ class App:
             
 
             if (container.get_style("layout") == "vertical"):
-                # TODO: check for other styles
-                txt += "\n".join(children)
+                lines = []
+                for child in children:
+                    spl = child.split("\n")
+                    for i in range(len(spl)):
+                        lines.append(spl[i])
+                for i in range(len(lines)):
+                    if (len(fstrip(lines[i])) < max_width):
+                        presets = {
+                            "bg": container.get_style("background"),
+                            "fg": None,
+                            "dec": [],
+                            "val_ret": True
+                        }
+                        lines[i] += printp(" " * (max_width - len(fstrip(lines[i]))), presets)
+                txt += "\n".join(lines)
+                
             elif (container.get_style("layout") == "horizontal"):
                 # check widths 
                 y_offset = 0 # keep track for every row
@@ -149,6 +163,46 @@ class App:
                     
             return "\n".join(lines)
 
+        elif (type(container) == Button):
+            width = container.get_style("width")
+            if (width == "parent"):
+                width = parent.get_style("width")
+            print(type(width))
+            if (width > parent.get_real_width()):
+                width = parent.get_real_width()
+            
+            height = container.get_style("height")
+            if (height > parent.get_real_height()):
+                height = parent.get_real_height()
+                
+            if (container.get_style("border") is True):
+                width -= 2
+                height -=2
+            
+            text = container.get_text()
+            spl = []
+            presets = {
+                "bg": container.get_style("background"),
+                "fg": container.get_style("color"),
+                "dec": [container.get_style("font_weight")],
+                "val_ret": True
+            }
+            # TODO: text styling
+            for i in range(0, int(len(text) / width + 1)):
+                t = text[i * width:(i+1)*width]
+                spl.append(printp(t, presets))
+                
+        
+            for i in range(len(spl)):
+                if (len(fstrip(spl[i])) < width):
+                    spl[i] += printp(" " * (width - len(fstrip(spl[i]))), presets)
+            if (len(spl) < height):
+                for i in range(len(spl), height):
+                    spl.append(printp(" " * width, presets))    
+            return "\n".join(spl)
+                
+    
+            
             
                 
             
@@ -169,7 +223,7 @@ class Box:
         }
         self.id = None
         self.parent = None
-        self.real_width = 100
+        # self.real_width = 100
     
     # helper methods for managing styles and children
     
@@ -214,6 +268,7 @@ class Box:
         height = self.get_style("height")
         if (self.get_style("border") is True):
             height -=2
+        return height
     
     def set_id(self, id):
         self.id = id
@@ -267,6 +322,67 @@ class Text:
         
     def get_id(self):
         return self.id
+    
+class Button:
+    def __init__(self, text):
+        self.text = text
+        self.styles = { # default styles
+            "color": (255, 255, 255),
+            "background": (0, 0, 0),
+            "font_weight": "normal",
+            "width": 30,
+            "height": 3,
+            "border": True,
+            "border_style": 4,
+            "border_background": None,
+            "border_color": (255, 255, 255),
+            "button_action": None
+        }
+        self.id = None
+        self.parent = None
+        self.children = []
+        
+    # the usual helper functions
+    
+    def set_style(self, key, value):
+        self.styles[key] = value
+    
+    def set_styles(self, styles):
+        self.styles.update(styles)
+        
+    def set_text(self, text):
+        self.text = text
+        
+    def get_styles(self):
+        return self.styles
+    
+    def get_style(self, key):
+        return self.styles.get(key, None)
+
+    def get_text(self):
+        return self.text
+    
+    def set_parent(self, parent):
+        self.parent = parent
+        
+    def get_parent(self):
+        return self.parent
+    
+    def set_id(self, id):
+        self.id = id
+        
+    def get_id(self):
+        return self.id
+    
+    def add_child(self, child):
+        self.children.append(child)
+        child.parent = self
+        
+    def remove_child(self, child):
+        self.children.remove(child)
+    
+    def get_children(self):
+        return self.children
     
     
 
