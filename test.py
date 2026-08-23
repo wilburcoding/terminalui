@@ -1,4 +1,4 @@
-from tui import App, Box, Text, Button
+from tui import App, Box, Text, Button, Input
 from colors import fstrip, printc
 app = App()
 
@@ -47,17 +47,30 @@ main_box.add_child(box3)
 app.set_main_container(main_box)
 # res = app._render_container(main_box, None)
 # print(res)
-
+def on_button_click(button):
+    printc(f"Button {button.get_id()} clicked!")
 button = Button("Click me something", "button1")
 button.set_style("width", 20)
+button.set_button_action(on_button_click)
 main_box.add_child(button)
 button2 = Button("Click me something", "button2")
 button2.set_style("width", 20)
+button2.set_button_action(on_button_click)
 
 main_box.add_child(button2)
 button3 = Button("Click me something", "button3")
 button3.set_style("width", 20)
+button3.set_style("height", 1)
+button3.set_disabled(True)
+button3.set_button_action(on_button_click)
+
+
+input1 = Input("input1")
+input1.set_style("width", 20)
+input1.set_style("height", 1)
+
 main_box.add_child(button3)
+main_box.add_child(input1)
 # print(main_box.get_styles())
 
 # app.render(debug=True)

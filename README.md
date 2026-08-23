@@ -55,6 +55,9 @@ Objectives:
              - WHat if parent also has "parent" as width..... Require containers to have a set width
        - Wrap is by default break word
          - Can figure out other options later
+     - Input element
+       - Basically a button eleemnt but text inside can change?
+       - Placeholder disappears when there's actually text inside
    - Generating output
      - Recursively generate the actual appearences of containers starting from main container
        - Main container should automatically be the size of the window

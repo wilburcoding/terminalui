@@ -46,7 +46,7 @@ class App:
         
         
         self.render()
-        with pynput.keyboard.Listener(on_press=self.on_key_press, on_release=self.on_key_release) as listener:
+        with pynput.keyboard.Listener(on_press=self.on_key_press, on_release=self.on_key_release, suppress=True) as listener:
             listener.join() # blocking function btw
             
 
@@ -84,8 +84,12 @@ class App:
                 if (id_index >= len(self.input_elements)):
                     id_index = 0
             self.selected_element_id = self.input_elements[id_index]["id"]
+            if (key == pynput.keyboard.Key.enter):
+                button_action = self.input_elements[id_index]["element"].get_button_action()
+                if (button_action is not None):
+                    button_action(self.input_elements[id_index]["element"])
         else:
-            if (key in [pynput.keyboard.Key.up, pynput.keyboard.Key.down, pynput.keyboard.Key.left, pynput.keyboard.Key.right]):
+            if (key in [pynput.keyboard.Key.left, pynput.keyboard.Key.right]):
                 if (len(self.input_elements) > 0):
                     self.selected_element_id = self.input_elements[0]["id"] 
 
@@ -115,7 +119,7 @@ class App:
         if (type(container) == Box):
             for child in container.get_children():
                 self._find_input_elements(child, full_render)
-        elif (type(container) == Button):
+        elif (type(container) == Button or type(container) == Input):
             # self.input_elements.append(container)
             
             # find position of button in full_render
@@ -132,11 +136,14 @@ class App:
             # corner = [lines_found[0][0], lines_found[0][1]]
             # width = lines_found[0][2] - lines_found[0][1]
             # height = len(lines_found)
+            if (container.get_disabled() is True):
+                return
+            
             self.input_elements.append({
                 # "corner": corner,
                 # "width": width,
                 # "height": height,
-                # "element": container,
+                "element": container,
                 "id": container.get_id()
             })
             
@@ -163,7 +170,6 @@ class App:
         
     def _render_container(self, container, parent):  
         if (type(container) == Box):
-            print(container.get_styles())
             txt = ""
             children = []
             for child in container.get_children():
@@ -292,8 +298,8 @@ class App:
             if (container.get_style("word_wrap") == "break-word"):
                 lines = []
                 # TODO: implement different text styling
-                for i in range(0, int(len(text) / width + 1)):
-                    t = text[i * width:(i+1)*width]
+                for i in range(0, len(text), width):
+                    t = text[i: i+width]
                     lines.append(t)
                 if (len(lines[-1]) < width):
                     lines[-1] += " " * (width - len(lines[-1]))
@@ -303,11 +309,10 @@ class App:
             container.set_cached_render(txt)
             return txt
 
-        elif (type(container) == Button):
+        elif (type(container) == Button or type(container) == Input):
             width = container.get_style("width")
             if (width == "parent"):
                 width = parent.get_style("width")
-            print(type(width))
             if (width > parent.get_real_width()):
                 width = parent.get_real_width()
             
@@ -320,6 +325,7 @@ class App:
                 height -=2
             
             text = container.get_text()
+
             spl = []
             presets = {
                 "bg": container.get_style("background"),
@@ -335,8 +341,23 @@ class App:
                     presets["fg"] = container.get_style("hover")["color"]
                 if ("font_weight" in container.get_style("hover")):
                     presets["dec"] = [container.get_style("hover")["font_weight"]]
-            for i in range(0, int(len(text) / width + 1)):
-                t = text[i * width:(i+1)*width]
+            elif (container.get_disabled() is True):
+                if ("background" in container.get_style("disabled")):
+                    presets["bg"] = container.get_style("disabled")["background"]
+                if ("color" in container.get_style("disabled")):
+                    presets["fg"] = container.get_style("disabled")["color"]
+                if ("font_weight" in container.get_style("disabled")):
+                    presets["dec"] = [container.get_style("disabled")["font_weight"]]
+            if (type(container) == Input and text == ""):
+                text = container.get_placeholder()
+                if ("color" in container.get_style("placeholder")):
+                    presets["fg"] = container.get_style('placeholder')["color"]
+                if ("background" in container.get_style("placeholder")):
+                    presets["bg"] = container.get_style("placeholder")["background"]
+                if ("font_weight" in container.get_style("placeholder")):
+                    presets["dec"] = [container.get_style("placeholder")["font_weight"]]
+            for i in range(0, len(text), width):
+                t = text[i:i+width]
                 spl.append(printp(t, presets))
                 
         
@@ -363,6 +384,14 @@ class App:
                         border_presets["fg"] = container.get_style("hover")["border_color"]
                     if ("border_background" in container.get_style("hover")):
                         border_presets["bg"] = container.get_style("hover")["border_background"]
+                elif (container.get_disabled() is True):
+                    if ("border_color" in container.get_style("disabled")):
+                        border_presets["fg"] = container.get_style("disabled")["border_color"]
+                    if ("border_background" in container.get_style("disabled")):
+                        border_presets["bg"] = container.get_style("disabled")["border_background"]
+                    if ("border_style" in container.get_style("disabled")):
+                        border_style = borders(container.get_style("disabled")["border_style"])
+                
                 first_line = printp(border_style["tl"] + (border_style["t"] * width) + border_style["tr"], border_presets)
                 for i in range(len(spl)):
                     spl[i] = printp(border_style["l"], border_presets) + spl[i] + printp(border_style["r"], border_presets)
@@ -525,8 +554,13 @@ class Button:
             "button_action": None,
             "hover": {
                 "border_style": 3
+            },
+            "disabled": {
+                "color": (150, 150, 150),
+                "border_color": (150, 150, 150)
             }
         }
+        self.disabled = False
         self.id = id
         self.parent = None
         self.children = []
@@ -587,6 +621,113 @@ class Button:
     def get_cached_render(self):
         return self.cached_render
     
+    def set_disabled(self, disabled):
+        self.disabled = disabled
+    
+    def get_disabled(self):
+        return self.disabled
 
+class Input:
+    def __init__(self, id):
+        self.styles = { # default styles
+            "color": (255, 255, 255),
+            "background": None,
+            "font_weight": "normal",
+            "width": 30,
+            "height": 1,
+            "border": True,
+            "border_style": 4,
+            "border_background": None,
+            "border_color": (255, 255, 255),
+            "hover": {
+                "border_style": 3,
+            },
+            "disabled": {
+                "color": (150, 150, 150),
+                "border_color": (150, 150, 150)
+            },
+            "placeholder": {
+                "color": (200, 200, 200)
+            }
+        }
+        self.disabled = False
+        self.children = []
+        self.parent = None
+        self.id = id
+        self.text = ""
+        self.cached_render = None
+        self.on_change_action = None
+        self.on_submit_action = None # like pressing enter
+        self.placeholder = "Enter text here..."
+    
+    def set_style(self, key, value):
+        self.styles[key] = value
+
+    def set_styles(self, styles):
+        self.styles.update(styles)
+        
+    def get_styles(self):
+        return self.styles
+
+    def get_style(self, key):
+        return self.styles.get(key, None)
+    
+    def set_parent(self, parent):
+        self.parent = parent
+        
+    def get_parent(self):
+        return self.parent
+    
+    def set_id(self, id):
+        self.id = id
+        
+    def get_id(self):
+        return self.id
+    
+    def set_text(self, text):
+        self.text = text
+    
+    def get_text(self):
+        return self.text
+    
+    def add_child(self, child):
+        self.children.append(child)
+        child.parent = self
+        
+    def remove_child(self, child):
+        self.children.remove(child)
+        
+    def get_children(self):
+        return self.children
+    
+    def set_cached_render(self, render):
+        self.cached_render = render
+    
+    def get_cached(self):
+        return self.cached_render
+    
+    def set_disabled(self, disabled):
+        self.disabled = disabled
+        
+    def get_disabled(self):
+        return self.disabled
+    
+    def set_on_change_action(self, action):
+        self.on_change_action = action
+        
+    def get_on_change_action(self):
+        return self.on_change_action
+    
+    def set_on_submit_action(self, action):
+        self.on_submit_action = action
+        
+    def get_on_submit_action(self):
+        return self.on_submit_action
+    
+    def set_placeholder(self, placeholder):
+        self.placeholder = placeholder
+        
+    def get_placeholder(self):
+        return self.placeholder
     
     
