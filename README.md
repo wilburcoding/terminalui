@@ -28,7 +28,9 @@ Objectives:
        - [x] Text
        - [x] Different container layouts
        - [x] Borders
-     - [ ] Figure out how to update things? 
+   - [ ] Live element selecting mode
+     - [ ] Key listeners
+     - [ ] How to detect elements at certain directions
  - [x] Color rendering engine
  - [ ] 
 
@@ -117,7 +119,12 @@ Objectives:
    - Think im gonna use pynput. Looks a little easier to use.
    - Need a way to identify selected elements
      - Force IDs? At least on all input elements
+     - some areas are different sizes -> maybe we should use preformatted version?
+       - Yeah this is probably the call -> user selecting would be based off the real positioning they see visually anyways
+       - After finding the ID of element, then its easy bcs we can just re render and it goes in automatically
    - To start, press any of the keyboard options
+   - How to check if something is in a direction?
+     - Look for center points within a certain area 
 
 # Notes
 
@@ -128,3 +135,5 @@ This sounded a lot easier in my head
 Google says i should have helper methods instead of letting people access my variables directly so i guess im doing that
 
 Normal Python shell ignores reset tokens. Command prompt seems to work. Also providing an extra new line at the end helps with the issue. VSCode commnad prompt also doesn't seem to work. Looks like splitting lines individually also helps with this issue. 
+
+Reminder that post-rendering strs always have ANSI sequences inside!

@@ -36,13 +36,16 @@ class App:
         self.listener_active = True
         
         self.input_elements = []
-        self._find_input_elements(self.main_container)
+        
+        rendered_layout = self._render_container(self.main_container, None)
+        self._find_input_elements(self.main_container, rendered_layout)
         self.selected_element_id = None
         # for element in self.input_elements:
-        #     print(element.get_id())
+        #     print(element["corner"])
+        #     print(element)
         
-            
-            
+        
+        self.render()
         with pynput.keyboard.Listener(on_press=self.on_key_press, on_release=self.on_key_release) as listener:
             listener.join() # blocking function btw
             
@@ -58,17 +61,26 @@ class App:
             return False
     
         # arrow keys
-        if (key == pynput.keyboard.Key.up):
-            pass
-        elif (key == pynput.keyboard.Key.down):
-            pass
-        elif (key == pynput.keyboard.Key.left):
-            pass
-        elif (key == pynput.keyboard.Key.right):
-            pass
-        
+        if (self.selected_element_id is not None):
+            if (key == pynput.keyboard.Key.up):
+                pass
+            elif (key == pynput.keyboard.Key.down):
+                pass
+            elif (key == pynput.keyboard.Key.left):
+                pass
+            elif (key == pynput.keyboard.Key.right):
+                pass
+        else:
+            if (key in [pynput.keyboard.Key.up, pynput.keyboard.Key.down, pynput.keyboard.Key.left, pynput.keyboard.Key.right]):
+                if (len(self.input_elements) > 0):
+                    self.selected_element_id = self.input_elements[0]["id"] 
+
         if (self.custom_key_actions["on_key_press"] is not None):
-            self.custom_key_actions["on_key_press"](key)
+            res = self.custom_key_actions["on_key_press"](key)
+            if (res is False):
+                return False # allow users to exit their own functions
+        self.render()
+        
     def on_key_release(self, key):
         if (key == pynput.keyboard.Key.esc):
             return False
@@ -76,19 +88,45 @@ class App:
             return False
         
         if (self.custom_key_actions["on_key_release"] is not None):
-            self.custom_key_actions["on_key_release"](key)
+            res = self.custom_key_actions["on_key_release"](key)
+            if (res is False):
+                return False # exit listener
         
     def stop_listener(self):
         self.listener_active = False
        
     
 
-    def _find_input_elements(self, container):
+    def _find_input_elements(self, container, full_render):
         if (type(container) == Box):
             for child in container.get_children():
-                self._find_input_elements(child)
+                self._find_input_elements(child, full_render)
         elif (type(container) == Button):
-            self.input_elements.append(container)
+            # self.input_elements.append(container)
+            
+            # find position of button in full_render
+            r_split = fstrip(full_render).split("\n")
+            c_split = fstrip(container.get_cached_render()).split("\n")
+            lines_found = []
+            for i in range(len(r_split)):
+                for j in range(len(c_split)):
+                    if (c_split[j] in r_split[i]):
+                        index = r_split[i].find(c_split[j])
+                        # print("Match found on line " + str(i) + " at index " + str(r_split[i].index(c_split[j])))
+                        # print(r_split[i][index:index+len(c_split[j])])
+                        lines_found.append([i, index, index + len(c_split[j])])
+            corner = [lines_found[0][0], lines_found[0][1]]
+            width = lines_found[0][2] - lines_found[0][1]
+            height = len(lines_found)
+            self.input_elements.append({
+                "corner": corner,
+                "width": width,
+                "height": height,
+                "element": container,
+                "id": container.get_id()
+            })
+            
+            
         
         
     def _clear(self):
@@ -216,7 +254,7 @@ class App:
                     spl[i] = printp(border_style["l"], presets) + spl[i] + printp(border_style["r"], presets)
                 last_line = printp(border_style["bl"] + (border_style["b"] * max_width) + border_style["br"], presets)
                 txt = first_line + "\n" + "\n".join(spl) + "\n" + last_line 
-                    
+            container.set_cached_render(txt)
             return txt
         elif (type(container) == Text):
             width = container.get_style("width")
@@ -247,8 +285,9 @@ class App:
                     lines[-1] += " " * (width - len(lines[-1]))
                 for i in range(len(lines)):
                     lines[i] = printp(lines[i], text_presets)
-                    
-            return "\n".join(lines)
+            txt = "\n".join(lines)
+            container.set_cached_render(txt)
+            return txt
 
         elif (type(container) == Button):
             width = container.get_style("width")
@@ -274,6 +313,14 @@ class App:
                 "dec": [container.get_style("font_weight")],
                 "val_ret": True
             }
+            if (self.selected_element_id == container.get_id()):
+                # apply hover styles to text
+                if ('background' in container.get_style("hover")):
+                    presets["bg"] = container.get_style("hover")["background"]
+                if ("color" in container.get_style("hover")):
+                    presets["fg"] = container.get_style("hover")["color"]
+                if ("font_weight" in container.get_style("hover")):
+                    presets["dec"] = [container.get_style("hover")["font_weight"]]
             for i in range(0, int(len(text) / width + 1)):
                 t = text[i * width:(i+1)*width]
                 spl.append(printp(t, presets))
@@ -295,11 +342,19 @@ class App:
                     "dec": [],
                     "val_ret": True
                 }
+                if (self.selected_element_id == container.get_id()):
+                    if ("border_style" in container.get_style("hover")):
+                        border_style = borders(container.get_style("hover")["border_style"])
+                    if ("border_color" in container.get_style("hover")):
+                        border_presets["fg"] = container.get_style("hover")["border_color"]
+                    if ("border_background" in container.get_style("hover")):
+                        border_presets["bg"] = container.get_style("hover")["border_background"]
                 first_line = printp(border_style["tl"] + (border_style["t"] * width) + border_style["tr"], border_presets)
                 for i in range(len(spl)):
                     spl[i] = printp(border_style["l"], border_presets) + spl[i] + printp(border_style["r"], border_presets)
                 last_line = printp(border_style["bl"] + (border_style["b"] * width) + border_style["br"], border_presets)
                 txt = first_line + "\n" + "\n".join(spl) + "\n" + last_line
+            container.set_cached_render(txt)
             return txt
                 
     
@@ -320,13 +375,14 @@ class Box:
             "border_style": 4,
             "border_background": None,
             "border_color": (255, 255, 255),
-            "background": (230, 230, 230),
+            "background": None,
             "hover": {
                 "border_style": 3
             }
         }
         self.id = None
         self.parent = None
+        self.cached_render = None
         # self.real_width = 100
     
     # helper methods for managing styles and children
@@ -380,6 +436,11 @@ class Box:
     def get_id(self):
         return self.id
         
+    def set_cached_render(self, render):
+        self.cached_render = render
+    
+    def get_cached_render(self):
+        return self.cached_render
 
 class Text: 
     def __init__(self, text):
@@ -393,6 +454,7 @@ class Text:
         }
         self.parent = None
         self.id = None
+        self.cached_render = None
     
     
     # helper methods
@@ -427,6 +489,12 @@ class Text:
     def get_id(self):
         return self.id
     
+    def set_cached_render(self, render):
+        self.cached_render = render
+        
+    def get_cached_render(self):
+        return self.cached_render
+    
 class Button:
     def __init__(self, text, id):
         self.text = text
@@ -448,6 +516,8 @@ class Button:
         self.id = id
         self.parent = None
         self.children = []
+        self.cached_render = None
+        self.button_action = None
         
     # the usual helper functions
     
@@ -491,6 +561,17 @@ class Button:
     def get_children(self):
         return self.children
     
+    def set_button_action(self, action):
+        self.button_action = action
+        
+    def get_button_action(self):
+        return self.button_action
+
+    def set_cached_render(self, render):
+        self.cached_render = render
+    
+    def get_cached_render(self):
+        return self.cached_render
     
 
     
