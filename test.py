@@ -53,7 +53,11 @@ button.set_style("width", 20)
 main_box.add_child(button)
 button2 = Button("Click me something", "button2")
 button2.set_style("width", 20)
+
 main_box.add_child(button2)
+button3 = Button("Click me something", "button3")
+button3.set_style("width", 20)
+main_box.add_child(button3)
 # print(main_box.get_styles())
 
 # app.render(debug=True)

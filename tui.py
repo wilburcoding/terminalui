@@ -62,14 +62,28 @@ class App:
     
         # arrow keys
         if (self.selected_element_id is not None):
-            if (key == pynput.keyboard.Key.up):
-                pass
-            elif (key == pynput.keyboard.Key.down):
-                pass
-            elif (key == pynput.keyboard.Key.left):
-                pass
+            # if (key == pynput.keyboard.Key.up):
+            #     pass
+            # elif (key == pynput.keyboard.Key.down):
+            #     pass
+            id_index = None
+            for i in range(len(self.input_elements)):
+                if (self.input_elements[i]["id"] == self.selected_element_id):
+                    id_index = i
+                    break
+            
+            if (id_index is None):
+                return
+            if (key == pynput.keyboard.Key.left):
+
+                id_index -=1
+                if (id_index < 0):
+                    id_index = len(self.input_elements) - 1
             elif (key == pynput.keyboard.Key.right):
-                pass
+                id_index +=1 
+                if (id_index >= len(self.input_elements)):
+                    id_index = 0
+            self.selected_element_id = self.input_elements[id_index]["id"]
         else:
             if (key in [pynput.keyboard.Key.up, pynput.keyboard.Key.down, pynput.keyboard.Key.left, pynput.keyboard.Key.right]):
                 if (len(self.input_elements) > 0):
@@ -105,24 +119,24 @@ class App:
             # self.input_elements.append(container)
             
             # find position of button in full_render
-            r_split = fstrip(full_render).split("\n")
-            c_split = fstrip(container.get_cached_render()).split("\n")
-            lines_found = []
-            for i in range(len(r_split)):
-                for j in range(len(c_split)):
-                    if (c_split[j] in r_split[i]):
-                        index = r_split[i].find(c_split[j])
-                        # print("Match found on line " + str(i) + " at index " + str(r_split[i].index(c_split[j])))
-                        # print(r_split[i][index:index+len(c_split[j])])
-                        lines_found.append([i, index, index + len(c_split[j])])
-            corner = [lines_found[0][0], lines_found[0][1]]
-            width = lines_found[0][2] - lines_found[0][1]
-            height = len(lines_found)
+            # r_split = fstrip(full_render).split("\n")
+            # c_split = fstrip(container.get_cached_render()).split("\n")
+            # lines_found = []
+            # for i in range(len(r_split)):
+            #     for j in range(len(c_split)):
+            #         if (c_split[j] in r_split[i]):
+            #             index = r_split[i].find(c_split[j])
+            #             # print("Match found on line " + str(i) + " at index " + str(r_split[i].index(c_split[j])))
+            #             # print(r_split[i][index:index+len(c_split[j])])
+            #             lines_found.append([i, index, index + len(c_split[j])])
+            # corner = [lines_found[0][0], lines_found[0][1]]
+            # width = lines_found[0][2] - lines_found[0][1]
+            # height = len(lines_found)
             self.input_elements.append({
-                "corner": corner,
-                "width": width,
-                "height": height,
-                "element": container,
+                # "corner": corner,
+                # "width": width,
+                # "height": height,
+                # "element": container,
                 "id": container.get_id()
             })
             

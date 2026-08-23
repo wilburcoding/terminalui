@@ -125,6 +125,9 @@ Objectives:
    - To start, press any of the keyboard options
    - How to check if something is in a direction?
      - Look for center points within a certain area 
+ - Big issue. What happens when elements look similar??
+   - How to track where elements end up in final rendering?
+   - Ok so no more -> we use rendering order to list
 
 # Notes
 
