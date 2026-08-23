@@ -11,6 +11,8 @@ class App:
             "on_key_press": None,
             "on_key_release": None
         }
+        self.input_elements = []
+        self.selected_element_id = None
         
     def set_main_container(self, container):
         self.main_container = container
@@ -32,8 +34,20 @@ class App:
     
     def start_listener(self):
         self.listener_active = True
+        
+        self.input_elements = []
+        self._find_input_elements(self.main_container)
+        self.selected_element_id = None
+        # for element in self.input_elements:
+        #     print(element.get_id())
+        
+            
+            
         with pynput.keyboard.Listener(on_press=self.on_key_press, on_release=self.on_key_release) as listener:
-            listener.join()
+            listener.join() # blocking function btw
+            
+
+        
         
             
     def on_key_press(self, key):
@@ -42,6 +56,16 @@ class App:
             return False    
         if (self.listener_active is False):
             return False
+    
+        # arrow keys
+        if (key == pynput.keyboard.Key.up):
+            pass
+        elif (key == pynput.keyboard.Key.down):
+            pass
+        elif (key == pynput.keyboard.Key.left):
+            pass
+        elif (key == pynput.keyboard.Key.right):
+            pass
         
         if (self.custom_key_actions["on_key_press"] is not None):
             self.custom_key_actions["on_key_press"](key)
@@ -56,6 +80,16 @@ class App:
         
     def stop_listener(self):
         self.listener_active = False
+       
+    
+
+    def _find_input_elements(self, container):
+        if (type(container) == Box):
+            for child in container.get_children():
+                self._find_input_elements(child)
+        elif (type(container) == Button):
+            self.input_elements.append(container)
+        
         
     def _clear(self):
         os.system("cls" if os.name == "nt" else "clear")
@@ -394,7 +428,7 @@ class Text:
         return self.id
     
 class Button:
-    def __init__(self, text):
+    def __init__(self, text, id):
         self.text = text
         self.styles = { # default styles
             "color": (255, 255, 255),
@@ -411,7 +445,7 @@ class Button:
                 "border_style": 3
             }
         }
-        self.id = None
+        self.id = id
         self.parent = None
         self.children = []
         

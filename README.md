@@ -115,6 +115,9 @@ Objectives:
  - Actively looking for input?
    - keyboard module or pynput
    - Think im gonna use pynput. Looks a little easier to use.
+   - Need a way to identify selected elements
+     - Force IDs? At least on all input elements
+   - To start, press any of the keyboard options
 
 # Notes
 
