@@ -21,16 +21,18 @@ Objectives:
      - [x] Container
        - [x] Container layouts -> just row and column for now probably
      - [x] Button
+     - [x] Input fields
      - [ ] Links
-   - [ ] Elements properties
+   - [x] Elements properties
+     - [x] Backgroudn
+     - [x] Border
    - [x] Rendering
      - [x] Initial rendering
        - [x] Text
        - [x] Different container layouts
        - [x] Borders
-   - [ ] Live element selecting mode
-     - [ ] Key listeners
-     - [ ] How to detect elements at certain directions
+   - [x] Live element selecting mode
+     - [x] Key listeners
  - [x] Color rendering engine
  - [ ] 
 
@@ -131,6 +133,7 @@ Objectives:
  - Big issue. What happens when elements look similar??
    - How to track where elements end up in final rendering?
    - Ok so no more -> we use rendering order to list
+ - 
 
 # Notes
 

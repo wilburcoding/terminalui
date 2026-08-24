@@ -64,10 +64,16 @@ button3.set_style("height", 1)
 button3.set_disabled(True)
 button3.set_button_action(on_button_click)
 
-
+def on_submit(input_field):
+    printc(f"Input {input_field.get_id()} submitted with value: {input_field.get_text()}")
+def on_change(input_field):
+    printc(f"{input_field.get_text()}")
 input1 = Input("input1")
 input1.set_style("width", 20)
-input1.set_style("height", 1)
+input1.set_style("height", 4)
+input1.set_on_submit_action(on_submit)
+input1.set_on_change_action(on_change)
+
 
 main_box.add_child(button3)
 main_box.add_child(input1)

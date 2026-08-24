@@ -84,10 +84,30 @@ class App:
                 if (id_index >= len(self.input_elements)):
                     id_index = 0
             self.selected_element_id = self.input_elements[id_index]["id"]
-            if (key == pynput.keyboard.Key.enter):
+            if (key == pynput.keyboard.Key.enter and type(self.input_elements[id_index]["element"]) == Button):
                 button_action = self.input_elements[id_index]["element"].get_button_action()
                 if (button_action is not None):
                     button_action(self.input_elements[id_index]["element"])
+            if (type(self.input_elements[id_index]["element"]) == Input):
+                if (key == pynput.keyboard.Key.backspace):
+                    text = self.input_elements[id_index]["element"].get_text()
+                    text = text[:-1]
+                    self.input_elements[id_index]["element"].set_text(text)
+                    change_action = self.input_elements[id_index]["element"].get_on_change_action()
+                    if (change_action is not None):
+                        change_action(self.input_elements[id_index]["element"])
+                elif (key == pynput.keyboard.Key.enter):
+                    on_submit_action = self.input_elements[id_index]["element"].get_on_submit_action()
+                    if (on_submit_action is not None):
+                        on_submit_action(self.input_elements[id_index]["element"])
+                elif (hasattr(key, "char") and key.char is not None):
+                    text = self.input_elements[id_index]["element"].get_text()
+                    text += key.char
+                    self.input_elements[id_index]["element"].set_text(text)
+                    change_action = self.input_elements[id_index]["element"].get_on_change_action()
+                    if (change_action is not None):
+                        change_action(self.input_elements[id_index]["element"])
+                    
         else:
             if (key in [pynput.keyboard.Key.left, pynput.keyboard.Key.right]):
                 if (len(self.input_elements) > 0):
