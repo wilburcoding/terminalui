@@ -73,6 +73,10 @@ input1.set_style("width", 20)
 input1.set_style("height", 4)
 input1.set_on_submit_action(on_submit)
 input1.set_on_change_action(on_change)
+box3.set_style("marginLeft", 2)
+box3.set_style("marginTop", 1)
+box3.set_style("marginBottom", 1)
+box3.set_style("marginRight", 2)
 
 
 main_box.add_child(button3)

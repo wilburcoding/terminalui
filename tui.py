@@ -294,6 +294,36 @@ class App:
                     spl[i] = printp(border_style["l"], presets) + spl[i] + printp(border_style["r"], presets)
                 last_line = printp(border_style["bl"] + (border_style["b"] * max_width) + border_style["br"], presets)
                 txt = first_line + "\n" + "\n".join(spl) + "\n" + last_line 
+                
+            spl = txt.split("\n")
+            presets = {
+                "bg": None,
+                "fg": None,
+                "dec": [],
+                "val_ret": True
+            }
+            if (parent is not None):
+                presets = {
+                    "bg": parent.get_style("background"),
+                    "fg": None,
+                    "dec": [],
+                    "val_ret":True
+                }
+            if (container.get_style("marginTop") > 0):
+                for i in range(container.get_style("marginTop")):
+                    spl.insert(0, printp(" " * max_width, presets))
+            if (container.get_style("marginBottom") > 0):
+                for i in range(container.get_style("marginBottom")):
+                    spl.append(printp(" " * max_width, presets))
+            if (container.get_style("marginLeft") > 0):
+                for i in range(len(spl)):
+                    spl[i] = printp(" " * container.get_style("marginLeft"), presets) + spl[i]
+            if (container.get_style("marginRight") > 0):
+                for i in range(len(spl)):
+                    spl[i] += printp(" " * container.get_style("marginRight"), presets)
+                
+            txt = "\n".join(spl)
+            
             container.set_cached_render(txt)
             return txt
         elif (type(container) == Text):
@@ -325,7 +355,26 @@ class App:
                     lines[-1] += " " * (width - len(lines[-1]))
                 for i in range(len(lines)):
                     lines[i] = printp(lines[i], text_presets)
+            presets = {
+                "bg": parent.get_style("background"),
+                "fg": None,
+                "dec": [],
+                "val_ret": True
+            }
+            if (container.get_style("marginTop") > 0):
+                for i in range(container.get_style("marginTop")):
+                    lines.insert(0, printp(" " * width, presets))
+            if (container.get_style("marginBottom") > 0):
+                for i in range(container.get_style("marginBottom")):
+                    lines.append(printp(" " * width, presets))
+            if (container.get_style("marginLeft") > 0):
+                for i in range(len(lines)):
+                    lines[i] = printp(" " * container.get_style("marginLeft"), presets) + lines[i]
+            if (container.get_style("marginRight") > 0):
+                for i in range(len(lines)):
+                    lines[i] += printp(" " * container.get_style("marginRight"), presets) 
             txt = "\n".join(lines)
+                    
             container.set_cached_render(txt)
             return txt
 
@@ -417,6 +466,37 @@ class App:
                     spl[i] = printp(border_style["l"], border_presets) + spl[i] + printp(border_style["r"], border_presets)
                 last_line = printp(border_style["bl"] + (border_style["b"] * width) + border_style["br"], border_presets)
                 txt = first_line + "\n" + "\n".join(spl) + "\n" + last_line
+            # render margins
+            presets = {
+                "bg": None,
+                "fg": None,
+                "dec": [],
+                "val_ret": True
+            }
+            if (parent is not None):
+                presets = {
+                    "bg": parent.get_style("background"),
+                    "fg": None,
+                    "dec": [],
+                    "val_ret": True
+                }
+            spl = txt.split("\n")
+            if (container.get_style("marginTop") > 0):
+                for i in range(container.get_style("marginTop")):
+                    spl.insert(0, printp(" " * width, presets))
+            if (container.get_style("marginBottom") > 0):
+                for i in range(container.get_style("marginBottom")):
+                    spl.append(printp(" " * width, presets))
+            if (container.get_style("marginLeft") > 0):
+                for i in range(len(spl)):
+                    spl[i] = printp(" " * container.get_style("marginLeft"), presets) + spl[i]
+            if (container.get_style("marginRight") > 0):
+                for i in range(len(spl)):
+                    spl[i] += printp(" " * container.get_style("marginRight"), presets)
+            txt = "\n".join(spl)
+                    
+            
+
             container.set_cached_render(txt)
             return txt
                 
@@ -441,7 +521,11 @@ class Box:
             "background": None,
             "hover": {
                 "border_style": 3
-            }
+            },
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "marginBottom": 0
         }
         self.id = None
         self.parent = None
@@ -513,7 +597,12 @@ class Text:
             "background": (0, 0, 0),
             "word_wrap": "break-word",
             "font_weight": "normal",
-            "width": "parent"
+            "width": "parent",
+            "height": 1,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "marginBottom": 0
         }
         self.parent = None
         self.id = None
@@ -578,7 +667,11 @@ class Button:
             "disabled": {
                 "color": (150, 150, 150),
                 "border_color": (150, 150, 150)
-            }
+            },
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "marginBottom": 0
         }
         self.disabled = False
         self.id = id
@@ -668,7 +761,11 @@ class Input:
             },
             "placeholder": {
                 "color": (200, 200, 200)
-            }
+            },
+            "marginTop": 0,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0
         }
         self.disabled = False
         self.children = []

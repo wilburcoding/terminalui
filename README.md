@@ -133,7 +133,10 @@ Objectives:
  - Big issue. What happens when elements look similar??
    - How to track where elements end up in final rendering?
    - Ok so no more -> we use rendering order to list
- - 
+ - How to do margin? 
+   - when processing a specific element, just add specific spacing -> use parent styling
+ - Features to help user
+ - Margin rendering should technically be the same across elements?
 
 # Notes
 
