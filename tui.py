@@ -481,8 +481,78 @@ class App:
 
             container.set_cached_render(txt)
             return txt
-                
-    
+        elif (type(container) == ProgressBar):
+            width = container.get_style("width")
+            if (width == "parent"):
+                width = parent.get_style("width")
+            if (width > parent.get_real_width()):
+                width = parent.get_real_width()
+            
+            height = container.get_style("height")
+            if (height > parent.get_real_height()):
+                height = parent.get_real_height()
+            if (container.get_style("border") is True):
+                width -= 2
+                height -= 2
+
+            fill_char = container.get_fill_char()
+            percent = container.get_value() / container.get_max_value() 
+            if (percent > 1):
+                percent = 1
+            if (percent < 0):
+                percent = 0
+            fill_width = int(width * percent)
+            
+            # gen fill text
+            presets = {
+                "bg": container.get_style("background"),
+                "fg": container.get_style("fill_color"),
+                "dec": [],
+                "val_ret": True
+            }
+            fill_text = printp(fill_char * fill_width, presets)
+            if (fill_width < width):
+                fill_text += printp(" " * (width - fill_width), presets)
+            
+            # theoretically its not possible for the fill text to be taller than the height
+            if (container.get_style("border") is True):
+                border_style = borders(container.get_style("border_style"))
+                border_presets = {
+                    "fg": container.get_style("border_color"),
+                    "bg": container.get_style("border_background"),
+                    "dec": [],
+                    "val_ret": True
+                }
+                first_line = printp(border_style["tl"] + (border_style["t"] * width) + border_style["tr"], border_presets)
+                fill_text = printp(border_style["l"], border_presets) + fill_text + printp(border_style["r"], border_presets)
+                last_line = printp(border_style["bl"] + (border_style["b"] * width) + border_style["br"], border_presets)
+                txt = "\n".join([first_line, fill_text, last_line])
+
+            # render margins
+            presets = {
+                "bg": None,
+                "fg": None,
+                "dec": [],
+                "val_ret": True
+            }
+            if (parent is not None):
+                presets = {
+                    "bg": parent.get_style("background"),
+                    "fg": None,
+                    "dec": [],
+                    "val_ret": True
+                }
+            spl = txt.split("\n")
+            for i in range(container.get_style("marginTop")):
+                spl.insert(0, printp(" " * width, presets))
+            for i in range(container.get_style("marginBottom")):
+                spl.append(printp(" " * width, presets))
+            for i in range(len(spl)):
+                spl[i] = printp(" " * container.get_style("marginLeft"), presets) + spl[i] + printp(" " * container.get_style("marginRight"), presets)
+            txt = "\n".join(spl)
+
+            container.set_cached_render(txt)
+            return txt                
             
             
                 
@@ -845,12 +915,13 @@ class ProgressBar:
             "border_background": None,
             "border_color": (255, 255, 255),
             "background": None,
-            "fill_color": (0, 255, 0),
+            "fill_color": (255, 255, 255),
             "marginTop": 0,
             "marginBottom": 0,
             "marginLeft": 0,
             "marginRight": 0
         }
+        self.fill_char = "#"
     
     def set_style(self, key, value):
         self.styles[key] = value
@@ -903,4 +974,10 @@ class ProgressBar:
         
     def get_cached_render(self):
         return self.cached_render
+    
+    def set_fill_char(self, char):
+        self.fill_char = char
+        
+    def get_fill_char(self):
+        return self.fill_char
     

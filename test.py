@@ -1,4 +1,4 @@
-from tui import App, Box, Text, Button, Input
+from tui import App, Box, Text, Button, Input, ProgressBar
 from colors import fstrip, printc
 app = App()
 
@@ -78,7 +78,12 @@ box3.set_style("marginTop", 1)
 box3.set_style("marginBottom", 1)
 box3.set_style("marginRight", 2)
 
-
+bar = ProgressBar("bar1")
+bar.set_style("width", 20)
+bar.set_style("height", 1)
+bar.set_value(50)
+bar.set_fill_char("=")
+main_box.add_child(bar)
 main_box.add_child(button3)
 main_box.add_child(input1)
 # print(main_box.get_styles())

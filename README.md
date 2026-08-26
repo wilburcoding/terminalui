@@ -143,6 +143,9 @@ Objectives:
    - Table? Should be realtively easy -> given a 2d list. 
      - Dynamic height and width of columns and rows
      - Users can enable columns, but by default there is spacing
+ - Progress bar
+   - Different styling options (will probably just number) -> ok nvm we'll just have them pick a specific character to fill
+   - Processes inner inside the rendering function 
 
 # Notes
 
