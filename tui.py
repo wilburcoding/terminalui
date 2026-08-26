@@ -309,21 +309,15 @@ class App:
                     "dec": [],
                     "val_ret":True
                 }
-            if (container.get_style("marginTop") > 0):
-                for i in range(container.get_style("marginTop")):
-                    spl.insert(0, printp(" " * max_width, presets))
-            if (container.get_style("marginBottom") > 0):
-                for i in range(container.get_style("marginBottom")):
-                    spl.append(printp(" " * max_width, presets))
-            if (container.get_style("marginLeft") > 0):
-                for i in range(len(spl)):
-                    spl[i] = printp(" " * container.get_style("marginLeft"), presets) + spl[i]
-            if (container.get_style("marginRight") > 0):
-                for i in range(len(spl)):
-                    spl[i] += printp(" " * container.get_style("marginRight"), presets)
+            for i in range(container.get_style("marginTop")):
+                spl.insert(0, printp(" " * max_width, presets))
+            for i in range(container.get_style("marginBottom")):
+                spl.append(printp(" " * max_width, presets))
+            for i in range(len(spl)):
+                spl[i] = printp(" " * container.get_style("marginLeft"), presets) + spl[i] + printp(" " * container.get_style("marginRight"), presets)
                 
             txt = "\n".join(spl)
-            
+
             container.set_cached_render(txt)
             return txt
         elif (type(container) == Text):
@@ -361,18 +355,12 @@ class App:
                 "dec": [],
                 "val_ret": True
             }
-            if (container.get_style("marginTop") > 0):
-                for i in range(container.get_style("marginTop")):
-                    lines.insert(0, printp(" " * width, presets))
-            if (container.get_style("marginBottom") > 0):
-                for i in range(container.get_style("marginBottom")):
-                    lines.append(printp(" " * width, presets))
-            if (container.get_style("marginLeft") > 0):
-                for i in range(len(lines)):
-                    lines[i] = printp(" " * container.get_style("marginLeft"), presets) + lines[i]
-            if (container.get_style("marginRight") > 0):
-                for i in range(len(lines)):
-                    lines[i] += printp(" " * container.get_style("marginRight"), presets) 
+            for i in range(container.get_style("marginTop")):
+                lines.insert(0, printp(" " * width, presets))
+            for i in range(container.get_style("marginBottom")):
+                lines.append(printp(" " * width, presets))
+            for i in range(len(lines)):
+                lines[i] = printp(" " * container.get_style("marginLeft"), presets) + lines[i] + printp(" " * container.get_style("marginRight"), presets)
             txt = "\n".join(lines)
                     
             container.set_cached_render(txt)
@@ -481,18 +469,12 @@ class App:
                     "val_ret": True
                 }
             spl = txt.split("\n")
-            if (container.get_style("marginTop") > 0):
-                for i in range(container.get_style("marginTop")):
-                    spl.insert(0, printp(" " * width, presets))
-            if (container.get_style("marginBottom") > 0):
-                for i in range(container.get_style("marginBottom")):
-                    spl.append(printp(" " * width, presets))
-            if (container.get_style("marginLeft") > 0):
-                for i in range(len(spl)):
-                    spl[i] = printp(" " * container.get_style("marginLeft"), presets) + spl[i]
-            if (container.get_style("marginRight") > 0):
-                for i in range(len(spl)):
-                    spl[i] += printp(" " * container.get_style("marginRight"), presets)
+            for i in range(container.get_style("marginTop")):
+                spl.insert(0, printp(" " * width, presets))
+            for i in range(container.get_style("marginBottom")):
+                spl.append(printp(" " * width, presets))
+            for i in range(len(spl)):
+                spl[i] = printp(" " * container.get_style("marginLeft"), presets) + spl[i] + printp(" " * container.get_style("marginRight"), presets)
             txt = "\n".join(spl)
                     
             
@@ -846,5 +828,79 @@ class Input:
         
     def get_placeholder(self):
         return self.placeholder
+
+class ProgressBar:
+    def __init__(self, id):
+        self.id = id
+        self.max_value = 100
+        self.value = 100
+        self.children = []
+        self.parent = None
+        self.cached_render = None
+        self.styles = {
+            "width": 30,
+            "height": 1,
+            "border": True,
+            "border_style": 4,
+            "border_background": None,
+            "border_color": (255, 255, 255),
+            "background": None,
+            "fill_color": (0, 255, 0),
+            "marginTop": 0,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0
+        }
     
+    def set_style(self, key, value):
+        self.styles[key] = value
+    
+    def set_styles(self, styles):
+        self.styles.update(styles)
+        
+    def get_styles(self):
+        return self.styles
+    
+    def get_style(self, key):
+        return self.styles.get(key, None)
+    
+    def set_parent(self, parent):
+        self.parent = parent
+        
+    def get_parent(self):
+        return self.parent
+    
+    def set_id(self, id):
+        self.id = id
+        
+    def get_id(self):
+        return self.id
+
+    def set_max_value(self, max_value):
+        self.max_value = max_value
+        
+    def get_max_value(self):
+        return self.max_value
+    
+    def set_value(self, value):
+        self.value = value
+        
+    def get_value(self):
+        return self.value
+    
+    def add_child(self, child):
+        self.children.append(child)
+        child.parent = self
+        
+    def remove_child(self, child):
+        self.children.remove(child)
+        
+    def get_children(self):
+        return self.children
+    
+    def set_cached_render(self, render):
+        self.cached_render = render
+        
+    def get_cached_render(self):
+        return self.cached_render
     

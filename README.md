@@ -137,6 +137,12 @@ Objectives:
    - when processing a specific element, just add specific spacing -> use parent styling
  - Features to help user
  - Margin rendering should technically be the same across elements?
+ - New elements
+   - Progress bar seems nice
+   - Multiple different views
+   - Table? Should be realtively easy -> given a 2d list. 
+     - Dynamic height and width of columns and rows
+     - Users can enable columns, but by default there is spacing
 
 # Notes
 
