@@ -1,5 +1,5 @@
 from tui import App, Box, Text, Button, Input, ProgressBar
-from colors import fstrip, printc
+# from colors import fstrip, printc
 app = App()
 
 main_box = Box()
@@ -48,7 +48,7 @@ app.set_main_container(main_box)
 # res = app._render_container(main_box, None)
 # print(res)
 def on_button_click(button):
-    printc(f"Button {button.get_id()} clicked!")
+    print(f"Button {button.get_id()} clicked!")
 button = Button("Click me something", "button1")
 button.set_style("width", 20)
 button.set_button_action(on_button_click)
@@ -65,9 +65,9 @@ button3.set_disabled(True)
 button3.set_button_action(on_button_click)
 
 def on_submit(input_field):
-    printc(f"Input {input_field.get_id()} submitted with value: {input_field.get_text()}")
+    print(f"Input {input_field.get_id()} submitted with value: {input_field.get_text()}")
 def on_change(input_field):
-    printc(f"{input_field.get_text()}")
+    print(f"{input_field.get_text()}")
 input1 = Input("input1")
 input1.set_style("width", 20)
 input1.set_style("height", 4)

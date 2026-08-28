@@ -44,16 +44,16 @@ class App:
         #     print(element["corner"])
         #     print(element)
         
-        
+        self._clear()
         self.render()
-        with pynput.keyboard.Listener(on_press=self.on_key_press, on_release=self.on_key_release, suppress=True) as listener:
+        with pynput.keyboard.Listener(on_press=self._on_key_press, on_release=self._on_key_release, suppress=True) as listener:
             listener.join() # blocking function btw
             
 
         
         
             
-    def on_key_press(self, key):
+    def _on_key_press(self, key):
         # print(key)
         if (key == pynput.keyboard.Key.esc):
             return False    
@@ -117,9 +117,9 @@ class App:
             res = self.custom_key_actions["on_key_press"](key)
             if (res is False):
                 return False # allow users to exit their own functions
-        self.render()
+
         
-    def on_key_release(self, key):
+    def _on_key_release(self, key):
         if (key == pynput.keyboard.Key.esc):
             return False
         if (self.listener_active is False):
@@ -129,6 +129,9 @@ class App:
             res = self.custom_key_actions["on_key_release"](key)
             if (res is False):
                 return False # exit listener
+        self._clear()
+        self.render()
+
         
     def stop_listener(self):
         self.listener_active = False
@@ -712,7 +715,6 @@ class Button:
             "border_style": 4,
             "border_background": None,
             "border_color": (255, 255, 255),
-            "button_action": None,
             "hover": {
                 "border_style": 3
             },
@@ -728,7 +730,6 @@ class Button:
         self.disabled = False
         self.id = id
         self.parent = None
-        self.children = []
         self.cached_render = None
         self.button_action = None
         
@@ -763,16 +764,6 @@ class Button:
         
     def get_id(self):
         return self.id
-    
-    def add_child(self, child):
-        self.children.append(child)
-        child.parent = self
-        
-    def remove_child(self, child):
-        self.children.remove(child)
-    
-    def get_children(self):
-        return self.children
     
     def set_button_action(self, action):
         self.button_action = action
@@ -820,7 +811,6 @@ class Input:
             "marginRight": 0
         }
         self.disabled = False
-        self.children = []
         self.parent = None
         self.id = id
         self.text = ""
@@ -858,16 +848,6 @@ class Input:
     
     def get_text(self):
         return self.text
-    
-    def add_child(self, child):
-        self.children.append(child)
-        child.parent = self
-        
-    def remove_child(self, child):
-        self.children.remove(child)
-        
-    def get_children(self):
-        return self.children
     
     def set_cached_render(self, render):
         self.cached_render = render

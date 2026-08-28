@@ -1,6 +1,8 @@
 # TerminalUI
 
-Easy to use Python library for displaying UI in the terminal
+Easy to use Python library for displaying UI in the terminal. See REFERENCE.md for full API reference and also some useful information (!!). Sample usage of all elements is available at `sample.py` (run with `python sample.py`). 
+
+Now available on PYPI! Just install `miniui` using `pip install miniui`. This is required for the sample file. 
 
 Objectives:
  - Easy to use, container based UI layout with actually good layout engine?
@@ -15,14 +17,14 @@ Objectives:
 # TODO
 
  - [ ] Layout engine
-   - [ ] Initiailization
-   - [ ] Elements
+   - [x] Initiailization
+   - [x] Elements
      - [x] Text
      - [x] Container
        - [x] Container layouts -> just row and column for now probably
      - [x] Button
      - [x] Input fields
-     - [ ] Links
+     - [x] Progress Bar
    - [x] Elements properties
      - [x] Backgroudn
      - [x] Border
@@ -34,7 +36,9 @@ Objectives:
    - [x] Live element selecting mode
      - [x] Key listeners
  - [x] Color rendering engine
- - [ ] 
+ - [ ] Documentation
+   - [ ] Create - REFERENCE.md
+   - [ ] 
 
 # IDEA DUMP
 
