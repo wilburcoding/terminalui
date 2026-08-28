@@ -164,3 +164,5 @@ Google says i should have helper methods instead of letting people access my var
 Normal Python shell ignores reset tokens. Command prompt seems to work. Also providing an extra new line at the end helps with the issue. VSCode commnad prompt also doesn't seem to work. Looks like splitting lines individually also helps with this issue. 
 
 Reminder that post-rendering strs always have ANSI sequences inside!
+
+**AI use disclaimer**: None at all :)
