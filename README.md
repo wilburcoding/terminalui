@@ -4,6 +4,8 @@ Easy to use Python library for displaying UI in the terminal. See REFERENCE.md f
 
 Now available on PYPI! Just install `miniui` using `pip install miniui`. This is required for the sample file. 
 
+I originally named the project `terminalui` (abbreviated as `tui` for the file and imports), but the name was taken on PYPI so the PYPI library is named `miniui`
+
 Objectives:
  - Easy to use, container based UI layout with actually good layout engine?
  - CSS like properties
