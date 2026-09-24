@@ -1,14 +1,6 @@
 # TerminalUI
 
-Easy to use Python library for displaying UI in the terminal. See REFERENCE.md for full API reference and also some useful information (!!). Sample usage of all elements is available at `sample.py` (run with `python sample.py`). 
-
-Now available on PYPI! Just install `miniui` using `pip install miniui`. This is required for the sample file. 
-
-I originally named the project `terminalui` (abbreviated as `tui` for the file and imports), but the name was taken on PYPI so the PYPI library is named `miniui`
-
-**Note**: I've only been able to test this with Commnad Prompt/Powershell on Windows. One of the input module dependencies requires has questionable support on Linux.
-
-For reference, I've put the source for the actual PyPI module inside of the `package` folder. I had to create the PyPi module in a different folder since `terminalui` was already taken. 
+Easy to use Python library for displaying UI in the terminal. See REFERENCE.md for full API reference. Sample usage of all elements is available at `sample.py` (run with `python sample.py`). 
 
 Objectives:
  - Easy to use, container based UI layout with actually good layout engine?
@@ -168,5 +160,3 @@ Google says i should have helper methods instead of letting people access my var
 Normal Python shell ignores reset tokens. Command prompt seems to work. Also providing an extra new line at the end helps with the issue. VSCode commnad prompt also doesn't seem to work. Looks like splitting lines individually also helps with this issue. 
 
 Reminder that post-rendering strs always have ANSI sequences inside!
-
-**AI use disclaimer**: None at all :)

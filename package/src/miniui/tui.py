@@ -1,5 +1,5 @@
 # main handler for the ui
-from colors import printc, printp, fstrip, borders
+from .colors import printc, printp, fstrip, borders
 import pynput
 import os
 

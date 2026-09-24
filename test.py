@@ -88,8 +88,8 @@ main_box.add_child(button3)
 main_box.add_child(input1)
 # print(main_box.get_styles())
 
-# app.render(debug=True)
-app.start_listener()
+app.render(debug=True)
+# app.start_listener()
 
 # testing strip_formatting
 # t = printc("Hello World", bg=(255, 0, 0), fg=(255, 255, 255), dec=["bold"], val_ret=True)
