@@ -1,12 +1,12 @@
 # TerminalUI
-
+![alt text](image.png)
 Easy to use Python library for displaying UI in the terminal. See REFERENCE.md for full API reference and also some useful information (!!). Sample usage of all elements is available at `sample.py` (run with `python sample.py`). 
 
 Now available on PYPI! Just install `miniui` using `pip install miniui`. This is required for the sample file. 
 
 I originally named the project `terminalui` (abbreviated as `tui` for the file and imports), but the name was taken on PYPI so the PYPI library is named `miniui`
 
-**Note**: I've only been able to test this with Commnad Prompt/Powershell on Windows. One of the input module dependencies requires has questionable support on Linux.
+**Note**: I've only been able to test this with Command Prompt/Powershell on Windows. One of the input module dependencies requires has questionable support on Linux.
 
 For reference, I've put the source for the actual PyPI module inside of the `package` folder. I had to create the PyPi module in a different folder since `terminalui` was already taken. 
 
@@ -19,6 +19,9 @@ Objectives:
    - Also maybe different frames? -> can select different frames
  - Easy to update?
  - HTML/CSS based importing? would be a lot cleaner than the normal
+
+
+
 
 # TODO
 
